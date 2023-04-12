@@ -1,7 +1,15 @@
-import { Button, Card, Divider, Stack, Typography } from '@mui/material'
+import {
+  Backdrop,
+  Button,
+  Card,
+  CircularProgress,
+  Divider,
+  Stack,
+  Typography,
+} from '@mui/material'
 import { Container } from '@mui/system'
 import { Fade } from 'react-awesome-reveal'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PersonAdd } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 
@@ -11,6 +19,12 @@ const Confirmation = () => {
   const ref3 = useRef(null)
   const router = useRouter()
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleBackdrop = () => {
+    setIsLoading((prev) => !prev)
+  }
+
   useEffect(() => {
     import('@lottiefiles/lottie-player')
     setTimeout(() => router.push('/'), 10000)
@@ -18,10 +32,25 @@ const Confirmation = () => {
 
   return (
     <>
-      <Container sx={{ padding: '50px 0' }} maxWidth='sm'>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+        onClick={handleBackdrop}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
+
+      <Container
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          padding: '50px 10px 0px',
+        }}
+        maxWidth='sm'
+      >
         <Typography
-          color='white'
-          fontSize='2.2rem'
+          fontSize='2.4rem'
           fontWeight='600'
           m='0 0 20px'
           sx={{
@@ -30,11 +59,11 @@ const Confirmation = () => {
             WebkitBackgroundClip: 'text',
             color: 'transparent',
             WebkitTextFillColor: 'transparent',
-            textAlign: 'center',
           }}
         >
           Red Umbrella Cafe - Waitlist
         </Typography>
+
         <Card sx={{ padding: '30px 20px' }}>
           <Fade triggerOnce>
             <Typography
@@ -64,6 +93,7 @@ const Confirmation = () => {
               style={{ height: '100px', width: '100px', margin: '0 auto' }}
               autoplay
             ></lottie-player>
+
             <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
               <lottie-player
                 id='second-lottie'
@@ -81,6 +111,7 @@ const Confirmation = () => {
                 waitlist!
               </Typography>
             </Stack>
+
             <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
               <lottie-player
                 id='third-lottie'
@@ -89,7 +120,7 @@ const Confirmation = () => {
                 background='transparent'
                 speed='1'
                 style={{ height: '50px', width: '50px' }}
-                loop={true}
+                loop
                 autoplay
               ></lottie-player>
               <Divider flexItem orientation='vertical' />
@@ -100,13 +131,17 @@ const Confirmation = () => {
             </Stack>
           </Fade>
         </Card>
+
         <Button
           variant='contained'
           startIcon={<PersonAdd />}
           type='submit'
           color='success'
           sx={{ margin: '30px auto', fontSize: '1.2rem' }}
-          onClick={() => router.push('/')}
+          onClick={() => {
+            router.push('/')
+            setIsLoading(true)
+          }}
         >
           Add Me
         </Button>

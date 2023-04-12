@@ -1,12 +1,15 @@
 const nextConfig = {
   reactStrictMode: true,
+  devIndicators: {
+    buildActivity: false,
+  },
 }
 
 const tablesreadyProxy = {
   target: 'https://api.tablesready.com',
   changeOrigin: true,
   headers: {
-    appkey: 'caba572a-3bc6-4961-9612-940faa42de2f',
+    appkey: process.env.APPKEY,
   },
   pathRewrite: {
     '^/api': '/public',

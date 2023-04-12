@@ -15,6 +15,10 @@ import {
   TextField,
   Typography,
   Stack,
+  Backdrop,
+  CircularProgress,
+  Snackbar,
+  Alert,
 } from '@mui/material'
 import {
   Person,
@@ -33,13 +37,25 @@ import {
 } from 'libphonenumber-js'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { formatLocalNumber } from '../utils/functions'
 
 const tablesready = axios.create({
   baseURL: '/api',
 })
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
   const router = useRouter()
+
+  const handleBackdrop = () => {
+    setIsLoading((prev) => !prev)
+  }
+
+  const handleSnackBar = () => {
+    setIsError((prev) => !prev)
+  }
 
   const initialValues = {
     name: '',
@@ -53,48 +69,36 @@ export default function Home() {
     name: yup.string().required().max(25).min(2),
     size: yup.number().max(10).min(1).required(),
     phone: yup.string().required(),
-    sharedTable: yup.string().required(),
+    sharedTable: yup.string().required('please choose one option'),
     sittingPreference: yup.string(),
   })
 
   const handlePhoneInput = (event, formik) => {
-    formik.setFieldError('phone', 'invalid phone number')
-
     const input = event.target.value
 
-    const hasCountryCode = input.length > 3 ? /^\+\d{1,3}/.test(input) : true
-
-    const modfiedInput = hasCountryCode ? input : `+1${input}`
-
-    const formattedInternationalPhone = formatIncompletePhoneNumber(input)
-    const parsedNationalPhone = findNumbers(modfiedInput)
-
-    const isValidNumber = isValidPhoneNumber(modfiedInput)
-    if (!isValidNumber) {
-      formik.setFieldError('phone', 'invalid phone number')
-    }
+    const nationalPhone = formatLocalNumber(input)
+    const internationalPhone = formatIncompletePhoneNumber(input)
+    const parsedNationalPhone = findNumbers(nationalPhone)
 
     if (
       parsedNationalPhone.length > 0 &&
       (parsedNationalPhone[0].country === 'CA' ||
         parsedNationalPhone[0].country === 'US')
     ) {
-      const numberObj = parsePhoneNumber(modfiedInput)
-
-      const nationalPhone = numberObj.format('NATIONAL', {
+      const numberObj = parsePhoneNumber(nationalPhone)
+      const formattedNationalPhone = numberObj.format('NATIONAL', {
         nationalPrefix: false,
       })
-      formik.setFieldValue('phone', nationalPhone)
+      formik.setFieldValue('phone', formattedNationalPhone)
     } else {
-      formik.setFieldValue('phone', formattedInternationalPhone)
+      formik.setFieldValue('phone', internationalPhone)
     }
   }
 
   const validatePhone = (input) => {
     let errorMessage
-    const hasCountryCode = input.length > 3 ? /^\+\d{1,3}/.test(input) : true
-    const modfiedInput = hasCountryCode ? input : `+1${input}`
-    const isValidNumber = isValidPhoneNumber(modfiedInput)
+    const updatedphone = formatLocalNumber(input)
+    const isValidNumber = isValidPhoneNumber(updatedphone)
     if (!isValidNumber) {
       errorMessage = 'invalid phone number'
     }
@@ -107,6 +111,8 @@ export default function Home() {
   }
 
   const onSubmit = (userInput) => {
+    setIsLoading(true)
+
     const data = {
       name: userInput.name,
       size: userInput.size,
@@ -123,24 +129,50 @@ export default function Home() {
       .then((_) => {
         router.push('/confirmation')
       })
-      .catch((err) => console.log(err))
+      .catch((_) => {
+        setIsLoading(false)
+        handleSnackBar()
+      })
   }
 
   return (
     <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+        onClick={handleBackdrop}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
+
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={handleSnackBar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        key='top center'
+      >
+        <Alert
+          onClose={handleSnackBar}
+          severity='error'
+          sx={{ width: '100%' }}
+          variant='filled'
+        >
+          Something went wrong... Please speak with one of our staff
+        </Alert>
+      </Snackbar>
+
       <Container
         sx={{
-          minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
           flexDirection: 'column',
-          paddingTop: '50px',
+          padding: '50px 10px 0px',
         }}
         maxWidth='sm'
       >
         <Typography
-          color='white'
-          fontSize='2.2rem'
+          fontSize='2.4rem'
           fontWeight='600'
           m='0 0 20px'
           sx={{
@@ -153,6 +185,7 @@ export default function Home() {
         >
           Red Umbrella Cafe - Waitlist
         </Typography>
+
         <Card
           sx={{
             padding: '40px 30px',
@@ -226,9 +259,7 @@ export default function Home() {
                   </Field>
 
                   <FormControl>
-                    <InputLabel id='demo-simple-select-label'>
-                      Shared table
-                    </InputLabel>
+                    <InputLabel id='select-label'>Shared table</InputLabel>
                     <Select
                       value={formik.values.sharedTable}
                       onChange={formik.handleChange}
@@ -236,15 +267,26 @@ export default function Home() {
                         formik.touched.sharedTable &&
                         !!formik.errors.sharedTable
                       }
-                      labelId='demo-simple-select-label'
-                      id='demo-simple-select'
+                      labelId='select-label'
+                      id='select'
                       name='sharedTable'
                       label='Shared table'
                     >
-                      <MenuItem value={'yes'}>Sure</MenuItem>
-                      <MenuItem value={'no'}>Prefer not</MenuItem>
+                      <MenuItem value={'yes'}>
+                        YES, I would like to share a table
+                      </MenuItem>
+                      <MenuItem value={'no'}>
+                        NO, I would like my own table
+                      </MenuItem>
                     </Select>
                     <FormHelperText>
+                      {formik.touched.sharedTable &&
+                        formik.errors.sharedTable && (
+                          <Typography variant='caption' color='error'>
+                            {formik.errors.sharedTable}
+                            <br />
+                          </Typography>
+                        )}
                       Sharing a table with others can result in a shorter wait
                       time. <br /> *Please note that the shared tables are large
                       tables located in the center of the restaurant.
@@ -254,12 +296,12 @@ export default function Home() {
                   <Field name='sittingPreference'>
                     {({ field }) => (
                       <FormControl>
-                        <FormLabel id='demo-row-radio-buttons-group-label'>
+                        <FormLabel id='buttons-group-label'>
                           Sitting preference
                         </FormLabel>
                         <RadioGroup
                           row
-                          aria-labelledby='demo-row-radio-buttons-group-label'
+                          aria-labelledby='buttons-group-label'
                           name='row-radio-buttons-group'
                           {...field}
                         >
@@ -276,7 +318,7 @@ export default function Home() {
                           <FormControlLabel
                             value='both'
                             control={<Radio />}
-                            label='Both are okay'
+                            label='Either is fine'
                           />
                         </RadioGroup>
                       </FormControl>
@@ -286,7 +328,7 @@ export default function Home() {
                   <Stack
                     direction='row'
                     justifyContent='center'
-                    spacing={4}
+                    spacing={5}
                     paddingTop='30px'
                   >
                     <Button
