@@ -12,6 +12,8 @@ import { Fade } from 'react-awesome-reveal'
 import { useEffect, useRef, useState } from 'react'
 import { PersonAdd } from '@mui/icons-material'
 import { useRouter } from 'next/router'
+import Confetti from 'react-confetti'
+import { useWindowSize } from 'react-use'
 
 const Confirmation = () => {
   const ref1 = useRef(null)
@@ -19,15 +21,25 @@ const Confirmation = () => {
   const ref3 = useRef(null)
   const router = useRouter()
 
+  const [screenWidth, setScreenWidth] = useState(0)
+  const [screenHeight, setScreenHeight] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleBackdrop = () => {
     setIsLoading((prev) => !prev)
   }
+  const { width, height } = useWindowSize()
 
   useEffect(() => {
     import('@lottiefiles/lottie-player')
-    setTimeout(() => router.push('/'), 10000)
+    setScreenWidth(width)
+    setScreenHeight(height)
+    const timer = setTimeout(() => router.push('/'), 10000)
+
+    // Cleanup function to clear the timeout
+    return () => {
+      clearTimeout(timer)
+    }
   }, [])
 
   return (
@@ -39,6 +51,8 @@ const Confirmation = () => {
       >
         <CircularProgress color='inherit' />
       </Backdrop>
+
+      <Confetti width={screenWidth} height={screenHeight} recycle={false} />
 
       <Container
         sx={{

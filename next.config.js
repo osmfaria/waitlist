@@ -21,9 +21,10 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: `${tablesreadyProxy.target}/${tablesreadyProxy.pathRewrite['^/api']}/:path*`,
+        source: '/api/tablesready/:path*',
+        destination: `${tablesreadyProxy.target}${tablesreadyProxy.pathRewrite['^/api']}/:path*`,
       },
     ]
   },
 }
+

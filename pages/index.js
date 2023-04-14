@@ -26,6 +26,7 @@ import {
   Groups,
   LocalPhone,
   Clear,
+  FormatListNumbered,
 } from '@mui/icons-material'
 import * as yup from 'yup'
 import { Field, Form, Formik } from 'formik'
@@ -35,27 +36,24 @@ import {
   formatIncompletePhoneNumber,
   isValidPhoneNumber,
 } from 'libphonenumber-js'
-import axios from 'axios'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { formatLocalNumber } from '../utils/functions'
-
-const tablesready = axios.create({
-  baseURL: '/api',
-})
+import { tablesready } from '../services/api'
+import Link from 'next/link'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const router = useRouter()
 
-  const handleBackdrop = () => {
+  const handleBackdrop = useCallback(() => {
     setIsLoading((prev) => !prev)
-  }
+  }, [])
 
-  const handleSnackBar = () => {
+  const handleSnackBar = useCallback(() => {
     setIsError((prev) => !prev)
-  }
+  }, [])
 
   const initialValues = {
     name: '',
@@ -129,7 +127,8 @@ export default function Home() {
       .then((_) => {
         router.push('/confirmation')
       })
-      .catch((_) => {
+      .catch((err) => {
+        console.log(err)
         setIsLoading(false)
         handleSnackBar()
       })
@@ -185,6 +184,21 @@ export default function Home() {
         >
           Red Umbrella Cafe - Waitlist
         </Typography>
+
+        <Link href='/waitlist' style={{ textDecoration: 'none' }}>
+          <Button
+            variant='contained'
+            startIcon={<FormatListNumbered />}
+            type='submit'
+            color='info'
+            sx={{ marginBottom: '20px', fontSize: '1.2rem' }}
+            onClick={() => {
+              setIsLoading(true)
+            }}
+          >
+            Show Waitlist
+          </Button>
+        </Link>
 
         <Card
           sx={{
@@ -339,6 +353,7 @@ export default function Home() {
                     >
                       Add
                     </Button>
+                    
                     <Button
                       onClick={() => handleClear(formik)}
                       variant='contained'
