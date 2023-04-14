@@ -95,7 +95,7 @@ const Confirmation = () => {
             >
               Thank you!
             </Typography>
-            <Typography textAlign='center'>
+            <Typography textAlign='center' color='GrayText'>
               We look forward to seeing you.
             </Typography>
             <lottie-player
@@ -108,7 +108,7 @@ const Confirmation = () => {
               autoplay
             ></lottie-player>
 
-            <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
+            {/* <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
               <lottie-player
                 id='second-lottie'
                 ref={ref2}
@@ -124,7 +124,7 @@ const Confirmation = () => {
                 Make sure you got a confirmation text that you joined the
                 waitlist!
               </Typography>
-            </Stack>
+            </Stack> */}
 
             <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
               <lottie-player
@@ -140,7 +140,7 @@ const Confirmation = () => {
               <Divider flexItem orientation='vertical' />
 
               <Typography>
-                You will receive another text when your table is ready.
+                You will receive a text when your table is ready.
               </Typography>
             </Stack>
           </Fade>

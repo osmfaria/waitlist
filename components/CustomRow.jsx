@@ -18,17 +18,20 @@ const CustomRow = ({ table }) => {
   return (
     <StyledTableRow>
       <TableCell>
-        <Avatar
-          sx={{
-            backgroundImage:
-              'linear-gradient(to top, #f43b47 0%, #453a94 100%);',
-          }}
-        >
-          <Typography>{ordinalNumber}</Typography>
-        </Avatar>
+        <Typography>{ordinalNumber}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant='body1'>{table.name}</Typography>
+        <Typography
+          variant='body1'
+          sx={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '80px',
+          }}
+        >
+          {table.name}
+        </Typography>
       </TableCell>
       <TableCell>
         <Typography>{encodedPhone}</Typography>

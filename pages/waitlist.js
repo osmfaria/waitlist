@@ -16,23 +16,30 @@ import {
 import { Container } from '@mui/system'
 import { useCallback, useEffect, useState } from 'react'
 import { PersonAdd, Group } from '@mui/icons-material'
-import { useRouter } from 'next/router'
 import { nextapi } from '../services/api'
 import CustomRow from '../components/CustomRow'
 import { Fade } from 'react-awesome-reveal'
 import Link from 'next/link'
+import NoWaitCard from '../components/NoWaitCard'
+import SkeletonRow from '../components/SkeletonRow'
 
 const Waitlist = () => {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [isFetching, setIsFetching] = useState(true)
   const [tables, setTables] = useState([])
   const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     nextapi
       .get('/tables')
-      .then((res) => setTables(res.data))
-      .catch((_) => setIsError(true))
+      .then((res) => {
+        setTables(res.data)
+        setIsFetching(false)
+      })
+      .catch((_) => {
+        setIsError(true)
+        setIsFetching(false)
+      })
   }, [])
 
   const handleBackdrop = useCallback(() => {
@@ -117,48 +124,60 @@ const Waitlist = () => {
             overflow: 'visible',
           }}
         >
-          <Fade triggerOnce>
-            <Box
-              sx={{
-                borderRadius: '50%',
-                height: '70px',
-                width: '70px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: 3,
-                position: 'absolute',
-                top: '-35px',
-                right: '-35px',
-                background: 'white',
-              }}
-            >
-              <Badge
-                color='success'
-                badgeContent={tables.length}
-                sx={{
-                  '& .MuiBadge-badge': {
-                    fontSize: '0.9rem',
-                  },
-                }}
-              >
-                <Group sx={{ height: '30px', width: '30px' }} />
-              </Badge>
-            </Box>
-          </Fade>
+          <Box width={{ xs: '300px', sm: '650px' }} minHeight='400px'>
+            {tables.length > 0 && (
+              <Fade triggerOnce>
+                <Box
+                  sx={{
+                    borderRadius: '50%',
+                    height: '70px',
+                    width: '70px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: 3,
+                    position: 'absolute',
+                    top: '-35px',
+                    right: '-35px',
+                    background: 'white',
+                  }}
+                >
+                  <Badge
+                    color='success'
+                    badgeContent={tables.length}
+                    sx={{
+                      '& .MuiBadge-badge': {
+                        fontSize: '0.9rem',
+                      },
+                    }}
+                  >
+                    <Group sx={{ height: '30px', width: '30px' }} />
+                  </Badge>
+                </Box>
+              </Fade>
+            )}
 
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-              <TableBody>
-                {tables.map((table, index) => (
-                  <CustomRow
-                    key={index}
-                    table={{ index: index + 1, ...table }}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+            {isFetching || tables.length > 0 ? (
+              <TableContainer component={Paper}>
+                <Table sx={{ width: '100%' }}>
+                  <TableBody>
+                    {isFetching
+                      ? [...Array(5)].map((_, index) => (
+                          <SkeletonRow key={index} />
+                        ))
+                      : tables.map((table, index) => (
+                          <CustomRow
+                            key={index}
+                            table={{ index: index + 1, ...table }}
+                          />
+                        ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+              <NoWaitCard handleBackdrop={handleBackdrop} />
+            )}
+          </Box>
         </Card>
       </Container>
     </>
