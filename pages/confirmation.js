@@ -40,7 +40,7 @@ const Confirmation = () => {
     return () => {
       clearTimeout(timer)
     }
-  }, [])
+  }, [width, height])
 
   return (
     <>
