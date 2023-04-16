@@ -1,4 +1,4 @@
-import { Avatar, styled, TableCell, TableRow, Typography } from '@mui/material'
+import { styled, TableCell, TableRow, Typography } from '@mui/material'
 import ordinal from 'ordinal'
 
 const StyledTableRow = styled(TableRow)(() => ({

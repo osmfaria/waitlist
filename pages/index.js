@@ -3,14 +3,10 @@ import {
   Card,
   Container,
   FormControl,
-  FormControlLabel,
   FormHelperText,
-  FormLabel,
   InputAdornment,
   InputLabel,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
   Typography,
@@ -39,13 +35,18 @@ import {
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { formatLocalNumber } from '../utils/functions'
-import { tablesready } from '../services/api'
+import { nextapi } from '../services/api'
 import Link from 'next/link'
+import { Poppins } from 'next/font/google'
+import ConfirmPhone from '../components/ConfirmPhone'
+
+const poppins = Poppins({ weight: '500', subsets: ['latin'] })
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
-  const router = useRouter()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [data, setData] = useState({})
 
   const handleBackdrop = useCallback(() => {
     setIsLoading((prev) => !prev)
@@ -53,6 +54,10 @@ export default function Home() {
 
   const handleSnackBar = useCallback(() => {
     setIsError((prev) => !prev)
+  }, [])
+
+  const handleDialog = useCallback(() => {
+    setIsDialogOpen((prev) => !prev)
   }, [])
 
   const initialValues = {
@@ -67,7 +72,7 @@ export default function Home() {
     name: yup.string().required().max(25).min(2),
     size: yup.number().max(10).min(1).required(),
     phone: yup.string().required(),
-    sharedTable: yup.string().required('please choose one option'),
+    sharedTable: yup.string().required('please, choose one option'),
     sittingPreference: yup.string(),
   })
 
@@ -109,29 +114,29 @@ export default function Home() {
   }
 
   const onSubmit = (userInput) => {
-    setIsLoading(true)
+    // setIsLoading(true)
 
-    const data = {
+    const inputData = {
       name: userInput.name,
       size: userInput.size,
       phone: userInput.phone,
-      note: `shared table: ${userInput.sharedTable}, sitting preference: ${userInput.sittingPreference}`,
+      note: `${userInput.sharedTable} ${userInput.sittingPreference}`,
     }
 
-    tablesready
-      .post('/walk-in', data, {
-        headers: {
-          appkey: 'caba572a-3bc6-4961-9612-940faa42de2f',
-        },
-      })
-      .then((_) => {
-        router.push('/confirmation')
-      })
-      .catch((err) => {
-        console.log(err)
-        setIsLoading(false)
-        handleSnackBar()
-      })
+    setData(inputData)
+
+    handleDialog()
+
+    // nextapi
+    //   .post('/tablesready, data)
+    //   .then((_) => {
+    //     router.push('/confirmation')
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //     setIsLoading(false)
+    //     handleSnackBar()
+    //   })
   }
 
   return (
@@ -160,6 +165,14 @@ export default function Home() {
           Something went wrong... Please speak with one of our staff
         </Alert>
       </Snackbar>
+
+      <ConfirmPhone
+        handleDialog={handleDialog}
+        isDialogOpen={isDialogOpen}
+        data={data}
+        handleSnackBar={handleSnackBar}
+        handleBackdrop={handleBackdrop}
+      />
 
       <Container
         sx={{
@@ -250,27 +263,33 @@ export default function Home() {
                       }}
                     />
                   </Stack>
-
-                  <Field name='phone' validate={validatePhone}>
-                    {({ field, meta }) => (
-                      <TextField
-                        {...field}
-                        label='Phone number'
-                        autoComplete='off'
-                        {...formik.getFieldProps('phone')}
-                        onChange={(event) => handlePhoneInput(event, formik)}
-                        error={!!meta.touched && !!meta.error}
-                        helperText={meta.touched && meta.error}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position='start'>
-                              <LocalPhone />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    )}
-                  </Field>
+                  <FormControl>
+                    <Field name='phone' validate={validatePhone}>
+                      {({ field, meta }) => (
+                        <TextField
+                          {...field}
+                          label='Phone number'
+                          autoComplete='off'
+                          {...formik.getFieldProps('phone')}
+                          onChange={(event) => handlePhoneInput(event, formik)}
+                          error={!!meta.touched && !!meta.error}
+                          helperText={meta.touched && meta.error}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position='start'>
+                                <LocalPhone />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                    </Field>
+                    <FormHelperText>
+                      When adding an international phone number, please include
+                      the country code preceded by a plus sign (e.g., +55, +44,
+                      ...).
+                    </FormHelperText>
+                  </FormControl>
 
                   <FormControl>
                     <InputLabel id='select-label'>Shared table</InputLabel>
@@ -286,12 +305,10 @@ export default function Home() {
                       name='sharedTable'
                       label='Shared table'
                     >
-                      <MenuItem value={'yes'}>
-                        YES, I would like to share a table
-                      </MenuItem>
-                      <MenuItem value={'no'}>
+                      <MenuItem value={'own table'}>
                         NO, I would like my own table
                       </MenuItem>
+                      <MenuItem value={'shared'}>YES, either is fine</MenuItem>
                     </Select>
                     <FormHelperText>
                       {formik.touched.sharedTable &&
@@ -307,7 +324,7 @@ export default function Home() {
                     </FormHelperText>
                   </FormControl>
 
-                  <Field name='sittingPreference'>
+                  {/* <Field name='sittingPreference'>
                     {({ field }) => (
                       <FormControl>
                         <FormLabel id='buttons-group-label'>
@@ -337,7 +354,7 @@ export default function Home() {
                         </RadioGroup>
                       </FormControl>
                     )}
-                  </Field>
+                  </Field> */}
 
                   <Stack
                     direction='row'
@@ -353,7 +370,7 @@ export default function Home() {
                     >
                       Add
                     </Button>
-                    
+
                     <Button
                       onClick={() => handleClear(formik)}
                       variant='contained'
@@ -368,6 +385,15 @@ export default function Home() {
             )}
           </Formik>
         </Card>
+        <Typography
+          fontFamily={poppins.style.fontFamily}
+          fontWeight='600'
+          fontSize='12px'
+          color='GrayText'
+          sx={{ alignSelf: 'flex-end', color: 'white', marginTop: '10px' }}
+        >
+          Made with 🖤 by Osmar
+        </Typography>
       </Container>
     </>
   )

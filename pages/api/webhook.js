@@ -14,7 +14,6 @@ export default async function handler(req, res) {
         const { name, phone } = webhookData.data
 
         const isParty = await Party.findOne({ tableId: `${phone}${name}` })
-        console.log('party finder 🧑‍🔬:', isParty)
         if (!isParty) {
           const newParty = new Party({
             name,

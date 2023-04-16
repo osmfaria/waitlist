@@ -84,6 +84,7 @@ const Waitlist = () => {
           flexDirection: 'column',
           padding: '50px 10px 0px',
           height: '100%',
+          marginBottom: '20px',
         }}
         maxWidth='sm'
       >

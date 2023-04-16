@@ -1,9 +1,5 @@
-import axios from "axios"
-
-export const tablesready = axios.create({
-  baseURL: '/api/tablesready',
-})
+import axios from 'axios'
 
 export const nextapi = axios.create({
-  baseURL: '/api'
+  baseURL: '/api',
 })
