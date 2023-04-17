@@ -5,8 +5,6 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const webhookData = req.body
 
-    console.log('webhook received ✅', webhookData)
-
     await connectDB()
 
     if (webhookData) {

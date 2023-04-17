@@ -10,7 +10,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import { nextapi } from '../services/api'
 
@@ -29,7 +28,8 @@ const ConfirmPhone = ({
 
     nextapi
       .post('/tablesready', data)
-      .then((_) => {
+      .then((res) => {
+        console.log(res.data)
         router.push('/confirmation')
       })
       .catch((_) => {

@@ -27,6 +27,11 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).json({ error: 'An error ocurred' })
     }
+  } else if (req.method === 'DELETE') {
+    await connectDB()
+    console.log('deleting tables')
+    await Party.deleteMany()
+    res.status(204).end()
   } else {
     res.status(405).json({ error: 'Method not allowed' })
   }
