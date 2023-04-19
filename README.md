@@ -1,14 +1,14 @@
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/osmfaria/waitlist)](https://img.shields.io/github/package-json/v/osmfaria/waitlist)
  
-# :coffee: Waitlist
+## :coffee: Waitlist
 
 This is a mini full stack application, to add users to wait list using TablesReady external API. 
 
 > Check the deployed [app](https://waitlist-redumbrella.vercel.app/).
 <img src="./public/app-design.png" />
 
-💭 features:\
-\
+## 💭 Features
+
 :heavy_check_mark: update internal waitlist through webhooks\
 :heavy_check_mark: vercel cron job to reset the waitlist daily
 
