@@ -70,7 +70,14 @@ export default function Home() {
 
   const validationSchema = yup.object({
     name: yup.string().required().max(25).min(2),
-    size: yup.number().max(10).min(1).required(),
+    size: yup
+      .number()
+      .max(
+        6,
+        'To accommodate groups larger than 6, kindly speak with one of our servers.'
+      )
+      .min(1)
+      .required(),
     phone: yup.string().required(),
     sharedTable: yup.string().required('please, choose one option'),
     sittingPreference: yup.string(),
