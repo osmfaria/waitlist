@@ -15,6 +15,10 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+  Radio,
 } from '@mui/material'
 import {
   Person,
@@ -79,8 +83,8 @@ export default function Home() {
       .min(1)
       .required(),
     phone: yup.string().required(),
-    sharedTable: yup.string().required('please, choose one option'),
-    sittingPreference: yup.string(),
+    sharedTable: yup.string(),
+    sittingPreference: yup.string().required('please select an option'),
   })
 
   const handlePhoneInput = (event, formik) => {
@@ -127,7 +131,9 @@ export default function Home() {
       name: userInput.name,
       size: userInput.size,
       phone: userInput.phone,
-      note: `${userInput.sharedTable} ${userInput.sittingPreference}`,
+      note: `${userInput.sharedTable || 'own table'} | ${
+        userInput.sittingPreference
+      }`,
     }
 
     setData(inputData)
@@ -331,16 +337,16 @@ export default function Home() {
                     </FormHelperText>
                   </FormControl>
 
-                  {/* <Field name='sittingPreference'>
+                  <Field name='sittingPreference'>
                     {({ field }) => (
-                      <FormControl>
+                      <FormControl error={formik.touched.sittingPreference && !!formik.errors.sittingPreference}>
                         <FormLabel id='buttons-group-label'>
                           Sitting preference
                         </FormLabel>
                         <RadioGroup
                           row
                           aria-labelledby='buttons-group-label'
-                          name='row-radio-buttons-group'
+                          name='buttons-group'
                           {...field}
                         >
                           <FormControlLabel
@@ -359,9 +365,17 @@ export default function Home() {
                             label='Either is fine'
                           />
                         </RadioGroup>
+                        <FormHelperText>
+                          {formik.touched.sittingPreference &&
+                            !!formik.errors.sittingPreference && (
+                              <Typography variant='caption' color='error'>
+                                {formik.errors.sittingPreference}
+                              </Typography>
+                            )}
+                        </FormHelperText>
                       </FormControl>
                     )}
-                  </Field> */}
+                  </Field>
 
                   <Stack
                     direction='row'
