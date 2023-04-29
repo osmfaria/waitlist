@@ -29,7 +29,6 @@ const ConfirmPhone = ({
     nextapi
       .post('/tablesready', data)
       .then((res) => {
-        console.log(res.data)
         router.push('/confirmation')
       })
       .catch((_) => {

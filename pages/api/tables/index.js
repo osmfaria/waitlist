@@ -4,7 +4,6 @@ import connectDB from '../../../lib/db-connect'
 import Party from '../../../models/party'
 
 export default async function handler(req, res) {
-  console.log(req.method)
   if (req.method === 'POST') {
     const { name, phone, tableId } = req.body
     console.log('tableId: ', tableId)

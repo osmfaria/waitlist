@@ -10,7 +10,7 @@ const NoWaitCard = ({ handleBackdrop }) => {
       <Stack spacing={2} alignItems='center'>
         <Image src={nowait} height={240} width={320} alt='no wait' />
         <Typography fontSize='1.2rem' color='GrayText'>
-          There&apos;s currently no waitlist
+          No waiting parties
         </Typography>
         <Link href='/' style={{ textDecoration: 'none' }}>
           <Button variant='outlined' color='success' onClick={handleBackdrop}>

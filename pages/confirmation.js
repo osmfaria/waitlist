@@ -17,7 +17,7 @@ import { useWindowSize } from 'react-use'
 
 const Confirmation = () => {
   const ref1 = useRef(null)
-  // const ref2 = useRef(null)
+  const ref2 = useRef(null)
   const ref3 = useRef(null)
   const router = useRouter()
 
@@ -32,9 +32,9 @@ const Confirmation = () => {
 
   useEffect(() => {
     import('@lottiefiles/lottie-player')
-    setScreenWidth(width)
+    setScreenWidth(width)  
     setScreenHeight(height)
-    const timer = setTimeout(() => router.push('/'), 10000)
+    const timer = setTimeout(() => router.push('/'), 13000)
 
     // Cleanup function to clear the timeout
     return () => {
@@ -108,7 +108,7 @@ const Confirmation = () => {
               autoplay
             ></lottie-player>
 
-            {/* <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
+            <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
               <lottie-player
                 id='second-lottie'
                 ref={ref2}
@@ -124,7 +124,7 @@ const Confirmation = () => {
                 Make sure you got a confirmation text that you joined the
                 waitlist!
               </Typography>
-            </Stack> */}
+            </Stack>
 
             <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
               <lottie-player
