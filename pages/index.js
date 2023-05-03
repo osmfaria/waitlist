@@ -43,6 +43,7 @@ import { nextapi } from '../services/api'
 import Link from 'next/link'
 import { Poppins } from 'next/font/google'
 import ConfirmPhone from '../components/ConfirmPhone'
+import { Fade } from 'react-awesome-reveal'
 
 const poppins = Poppins({ weight: '500', subsets: ['latin'] })
 
@@ -51,6 +52,8 @@ export default function Home() {
   const [isError, setIsError] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [data, setData] = useState({})
+  const [isSharable, setIsSharable] = useState(false)
+  const [partySize, setPartySize] = useState(0)
 
   const handleBackdrop = useCallback(() => {
     setIsLoading((prev) => !prev)
@@ -127,13 +130,24 @@ export default function Home() {
   const onSubmit = (userInput) => {
     // setIsLoading(true)
 
+    const sharedTableData =
+      userInput.sharedTable === 'Shared' ? userInput.sharedTable : ''
+
+    const sittingPreferenceData =
+      userInput.sittingPreference !== 'Inside'
+        ? userInput.sittingPreference
+        : ''
+
+    const noteData =
+      !!sharedTableData && !!sittingPreferenceData
+        ? `${sharedTableData} | ${sittingPreferenceData}`
+        : sharedTableData + sittingPreferenceData
+
     const inputData = {
       name: userInput.name,
       size: userInput.size,
       phone: userInput.phone,
-      note: `${userInput.sharedTable || 'own table'} | ${
-        userInput.sittingPreference
-      }`,
+      note: noteData,
     }
 
     setData(inputData)
@@ -265,6 +279,10 @@ export default function Home() {
                       type='number'
                       autoComplete='off'
                       {...formik.getFieldProps('size')}
+                      onChange={(e) => {
+                        setPartySize(e.target.value)
+                        formik.setFieldValue('size', e.target.value)
+                      }}
                       error={formik.touched.size && !!formik.errors.size}
                       helperText={formik.touched.size && formik.errors.size}
                       InputProps={{
@@ -304,42 +322,18 @@ export default function Home() {
                     </FormHelperText>
                   </FormControl>
 
-                  <FormControl>
-                    <InputLabel id='select-label'>Shared table</InputLabel>
-                    <Select
-                      value={formik.values.sharedTable}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.sharedTable &&
-                        !!formik.errors.sharedTable
-                      }
-                      labelId='select-label'
-                      id='select'
-                      name='sharedTable'
-                      label='Shared table'
-                    >
-                      <MenuItem value={'own table'}>
-                        NO, I would like my own table
-                      </MenuItem>
-                      <MenuItem value={'shared'}>YES, either is fine</MenuItem>
-                    </Select>
-                    <FormHelperText>
-                      {formik.touched.sharedTable &&
-                        formik.errors.sharedTable && (
-                          <Typography variant='caption' color='error'>
-                            {formik.errors.sharedTable}
-                            <br />
-                          </Typography>
-                        )}
-                      Sharing a table with others can result in a shorter wait
-                      time. <br /> *Please note that the shared tables are large
-                      tables located in the center of the restaurant.
-                    </FormHelperText>
-                  </FormControl>
-
                   <Field name='sittingPreference'>
                     {({ field }) => (
-                      <FormControl error={formik.touched.sittingPreference && !!formik.errors.sittingPreference}>
+                      <FormControl
+                        error={
+                          formik.touched.sittingPreference &&
+                          !!formik.errors.sittingPreference
+                        }
+                        onChange={(e) => {
+                          if (e.target.value !== 'Patio') setIsSharable(true)
+                          else setIsSharable(false)
+                        }}
+                      >
                         <FormLabel id='buttons-group-label'>
                           Sitting preference
                         </FormLabel>
@@ -350,17 +344,17 @@ export default function Home() {
                           {...field}
                         >
                           <FormControlLabel
-                            value='inside'
+                            value='Inside'
                             control={<Radio />}
                             label='Inside'
                           />
                           <FormControlLabel
-                            value='patio'
+                            value='Patio'
                             control={<Radio />}
                             label='Patio'
                           />
                           <FormControlLabel
-                            value='both'
+                            value='Both'
                             control={<Radio />}
                             label='Either is fine'
                           />
@@ -376,6 +370,46 @@ export default function Home() {
                       </FormControl>
                     )}
                   </Field>
+
+                  {isSharable && partySize < 3 && (
+                    <Fade>
+                      <FormControl>
+                        <InputLabel id='select-label'>Shared table</InputLabel>
+                        <Select
+                          value={formik.values.sharedTable}
+                          onChange={formik.handleChange}
+                          error={
+                            formik.touched.sharedTable &&
+                            !!formik.errors.sharedTable
+                          }
+                          labelId='select-label'
+                          id='select'
+                          name='sharedTable'
+                          label='Shared table'
+                        >
+                          <MenuItem value={'Own table'}>
+                            NO, I would like my own table
+                          </MenuItem>
+                          <MenuItem value={'Shared'}>
+                            YES, either is fine
+                          </MenuItem>
+                        </Select>
+                        <FormHelperText>
+                          {formik.touched.sharedTable &&
+                            formik.errors.sharedTable && (
+                              <Typography variant='caption' color='error'>
+                                {formik.errors.sharedTable}
+                                <br />
+                              </Typography>
+                            )}
+                          Sharing a table with others can result in a shorter
+                          wait time. <br /> *Please note that the shared tables
+                          are large tables located in the center of the
+                          restaurant.
+                        </FormHelperText>
+                      </FormControl>
+                    </Fade>
+                  )}
 
                   <Stack
                     direction='row'
