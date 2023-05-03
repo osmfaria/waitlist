@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material'
 import { Container } from '@mui/system'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { PersonAdd, Group } from '@mui/icons-material'
 import { nextapi } from '../services/api'
 import CustomRow from '../components/CustomRow'
@@ -28,8 +28,10 @@ const Waitlist = () => {
   const [isFetching, setIsFetching] = useState(true)
   const [tables, setTables] = useState([])
   const [isError, setIsError] = useState(false)
+  const ref1 = useRef(null)
 
   useEffect(() => {
+    import('@lottiefiles/lottie-player')
     nextapi
       .get('/tables')
       .then((res) => {
@@ -57,7 +59,23 @@ const Waitlist = () => {
         open={isLoading}
         onClick={handleBackdrop}
       >
-        <CircularProgress color='inherit' />
+        {/* <CircularProgress color='inherit' /> */}
+        <Box sx={{ background: 'white', borderRadius: '50%' }}>
+          <lottie-player
+            id='first-lottie'
+            ref={ref1}
+            src='https://assets10.lottiefiles.com/packages/lf20_gqn2n5rs.json'
+            background='transparent'
+            speed='1'
+            style={{
+              height: '230px',
+              width: '230px',
+              margin: '0 auto',
+            }}
+            loop
+            autoplay
+          ></lottie-player>
+        </Box>
       </Backdrop>
 
       <Snackbar

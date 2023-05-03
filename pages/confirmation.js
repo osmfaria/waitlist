@@ -1,5 +1,6 @@
 import {
   Backdrop,
+  Box,
   Button,
   Card,
   CircularProgress,
@@ -19,6 +20,8 @@ const Confirmation = () => {
   const ref1 = useRef(null)
   const ref2 = useRef(null)
   const ref3 = useRef(null)
+  const ref4 = useRef(null)
+
   const router = useRouter()
 
   const [screenWidth, setScreenWidth] = useState(0)
@@ -49,7 +52,23 @@ const Confirmation = () => {
         open={isLoading}
         onClick={handleBackdrop}
       >
-        <CircularProgress color='inherit' />
+        {/* <CircularProgress color='inherit' /> */}
+        <Box sx={{ background: 'white', borderRadius: '50%' }}>
+          <lottie-player
+            id='first-lottie'
+            ref={ref4}
+            src='https://assets10.lottiefiles.com/packages/lf20_gqn2n5rs.json'
+            background='transparent'
+            speed='1'
+            style={{
+              height: '230px',
+              width: '230px',
+              margin: '0 auto',
+            }}
+            loop
+            autoplay
+          ></lottie-player>
+        </Box>
       </Backdrop>
 
       <Confetti width={screenWidth} height={screenHeight} recycle={false} />

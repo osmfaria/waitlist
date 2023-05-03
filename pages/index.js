@@ -19,6 +19,7 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  Divider,
 } from '@mui/material'
 import {
   Person,
@@ -27,6 +28,7 @@ import {
   LocalPhone,
   Clear,
   FormatListNumbered,
+  CoffeeTwoTone,
 } from '@mui/icons-material'
 import * as yup from 'yup'
 import { Field, Form, Formik } from 'formik'
@@ -37,17 +39,19 @@ import {
   isValidPhoneNumber,
 } from 'libphonenumber-js'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { formatLocalNumber } from '../utils/functions'
 import { nextapi } from '../services/api'
 import Link from 'next/link'
 import { Poppins } from 'next/font/google'
 import ConfirmPhone from '../components/ConfirmPhone'
 import { Fade } from 'react-awesome-reveal'
+import { Box } from '@mui/system'
 
 const poppins = Poppins({ weight: '500', subsets: ['latin'] })
 
 export default function Home() {
+  const ref1 = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -65,6 +69,10 @@ export default function Home() {
 
   const handleDialog = useCallback(() => {
     setIsDialogOpen((prev) => !prev)
+  }, [])
+
+  useEffect(() => {
+    import('@lottiefiles/lottie-player')
   }, [])
 
   const initialValues = {
@@ -173,7 +181,23 @@ export default function Home() {
         open={isLoading}
         onClick={handleBackdrop}
       >
-        <CircularProgress color='inherit' />
+        {/* <CircularProgress color='inherit' /> */}
+        <Box sx={{ background: 'white', borderRadius: '50%' }}>
+          <lottie-player
+            id='first-lottie'
+            ref={ref1}
+            src='https://assets10.lottiefiles.com/packages/lf20_gqn2n5rs.json'
+            background='transparent'
+            speed='1'
+            style={{
+              height: '230px',
+              width: '230px',
+              margin: '0 auto',
+            }}
+            loop
+            autoplay
+          ></lottie-player>
+        </Box>
       </Backdrop>
 
       <Snackbar
@@ -321,6 +345,8 @@ export default function Home() {
                       ...).
                     </FormHelperText>
                   </FormControl>
+
+                  <Divider />
 
                   <Field name='sittingPreference'>
                     {({ field }) => (
