@@ -52,23 +52,7 @@ const Confirmation = () => {
         open={isLoading}
         onClick={handleBackdrop}
       >
-        {/* <CircularProgress color='inherit' /> */}
-        <Box sx={{ background: 'white', borderRadius: '50%' }}>
-          <lottie-player
-            id='first-lottie'
-            ref={ref4}
-            src='https://assets10.lottiefiles.com/packages/lf20_gqn2n5rs.json'
-            background='transparent'
-            speed='1'
-            style={{
-              height: '230px',
-              width: '230px',
-              margin: '0 auto',
-            }}
-            loop
-            autoplay
-          ></lottie-player>
-        </Box>
+        <CircularProgress color='inherit' />
       </Backdrop>
 
       <Confetti width={screenWidth} height={screenHeight} recycle={false} />
@@ -86,15 +70,9 @@ const Confirmation = () => {
           fontSize='2.4rem'
           fontWeight='600'
           m='0 0 20px'
-          sx={{
-            background:
-              'linear-gradient(to right, red, orange, yellow, green, blue, violet)',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            WebkitTextFillColor: 'transparent',
-          }}
+          color={'#e3e3e3'}
         >
-          Red Umbrella Cafe - Waitlist
+          Red Umbrella Cafe
         </Typography>
 
         <Card sx={{ padding: '30px 20px' }}>

@@ -28,7 +28,6 @@ import {
   LocalPhone,
   Clear,
   FormatListNumbered,
-  CoffeeTwoTone,
 } from '@mui/icons-material'
 import * as yup from 'yup'
 import { Field, Form, Formik } from 'formik'
@@ -38,20 +37,16 @@ import {
   formatIncompletePhoneNumber,
   isValidPhoneNumber,
 } from 'libphonenumber-js'
-import { useRouter } from 'next/router'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { formatLocalNumber } from '../utils/functions'
-import { nextapi } from '../services/api'
 import Link from 'next/link'
 import { Poppins } from 'next/font/google'
 import ConfirmPhone from '../components/ConfirmPhone'
 import { Fade } from 'react-awesome-reveal'
-import { Box } from '@mui/system'
 
 const poppins = Poppins({ weight: '500', subsets: ['latin'] })
 
 export default function Home() {
-  const ref1 = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -69,10 +64,6 @@ export default function Home() {
 
   const handleDialog = useCallback(() => {
     setIsDialogOpen((prev) => !prev)
-  }, [])
-
-  useEffect(() => {
-    import('@lottiefiles/lottie-player')
   }, [])
 
   const initialValues = {
@@ -136,18 +127,19 @@ export default function Home() {
   }
 
   const onSubmit = (userInput) => {
-    // setIsLoading(true)
-
+    // Empty string or "Shared"
     const sharedTableData =
       userInput.sharedTable === 'Shared' ? userInput.sharedTable : ''
 
+    // Empty string, "Patio" or "Both"
     const sittingPreferenceData =
       userInput.sittingPreference !== 'Inside'
         ? userInput.sittingPreference
         : ''
 
+    // Build note
     const noteData =
-      !!sharedTableData && !!sittingPreferenceData
+      sharedTableData && sittingPreferenceData
         ? `${sharedTableData} | ${sittingPreferenceData}`
         : sharedTableData + sittingPreferenceData
 
@@ -158,20 +150,11 @@ export default function Home() {
       note: noteData,
     }
 
+    // State will be passed as a prop to confirmPhone modal
     setData(inputData)
 
+    // Open modal to confirm phone number
     handleDialog()
-
-    // nextapi
-    //   .post('/tablesready, data)
-    //   .then((_) => {
-    //     router.push('/confirmation')
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //     setIsLoading(false)
-    //     handleSnackBar()
-    //   })
   }
 
   return (
@@ -181,23 +164,7 @@ export default function Home() {
         open={isLoading}
         onClick={handleBackdrop}
       >
-        {/* <CircularProgress color='inherit' /> */}
-        <Box sx={{ background: 'white', borderRadius: '50%' }}>
-          <lottie-player
-            id='first-lottie'
-            ref={ref1}
-            src='https://assets10.lottiefiles.com/packages/lf20_gqn2n5rs.json'
-            background='transparent'
-            speed='1'
-            style={{
-              height: '230px',
-              width: '230px',
-              margin: '0 auto',
-            }}
-            loop
-            autoplay
-          ></lottie-player>
-        </Box>
+        <CircularProgress color='inherit' />
       </Backdrop>
 
       <Snackbar
@@ -238,15 +205,9 @@ export default function Home() {
           fontSize='2.4rem'
           fontWeight='600'
           m='0 0 20px'
-          sx={{
-            background:
-              'linear-gradient(to right, red, orange, yellow, green, blue, violet)',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            WebkitTextFillColor: 'transparent',
-          }}
+          color={'#e3e3e3'}
         >
-          Red Umbrella Cafe - Waitlist
+          Red Umbrella Cafe
         </Typography>
 
         <Link href='/waitlist' style={{ textDecoration: 'none' }}>
@@ -325,7 +286,6 @@ export default function Home() {
                           {...field}
                           label='Phone number'
                           autoComplete='off'
-                          {...formik.getFieldProps('phone')}
                           onChange={(event) => handlePhoneInput(event, formik)}
                           error={!!meta.touched && !!meta.error}
                           helperText={meta.touched && meta.error}
@@ -342,7 +302,7 @@ export default function Home() {
                     <FormHelperText>
                       When adding an international phone number, please include
                       the country code preceded by a plus sign (e.g., +55, +44,
-                      ...).
+                      ...)
                     </FormHelperText>
                   </FormControl>
 
@@ -356,6 +316,7 @@ export default function Home() {
                           !!formik.errors.sittingPreference
                         }
                         onChange={(e) => {
+                          // Set the state that will control if sharaed table input will be visible
                           if (e.target.value !== 'Patio') setIsSharable(true)
                           else setIsSharable(false)
                         }}
@@ -387,7 +348,7 @@ export default function Home() {
                         </RadioGroup>
                         <FormHelperText>
                           {formik.touched.sittingPreference &&
-                            !!formik.errors.sittingPreference && (
+                            formik.errors.sittingPreference && (
                               <Typography variant='caption' color='error'>
                                 {formik.errors.sittingPreference}
                               </Typography>
@@ -413,7 +374,7 @@ export default function Home() {
                           name='sharedTable'
                           label='Shared table'
                         >
-                          <MenuItem value={'Own table'}>
+                          <MenuItem value={'Own Table'}>
                             NO, I would like my own table
                           </MenuItem>
                           <MenuItem value={'Shared'}>
@@ -471,7 +432,7 @@ export default function Home() {
           fontWeight='600'
           fontSize='12px'
           color='GrayText'
-          sx={{ alignSelf: 'flex-end', color: 'white', marginTop: '10px' }}
+          sx={{ alignSelf: 'flex-end', color: '#e3e3e3', marginTop: '10px' }}
         >
           Made with 🖤 by Osmar
         </Typography>

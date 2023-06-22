@@ -28,7 +28,7 @@ const ConfirmPhone = ({
 
     nextapi
       .post('/tablesready', data)
-      .then((res) => {
+      .then((_) => {
         router.push('/confirmation')
       })
       .catch((_) => {
@@ -56,7 +56,7 @@ const ConfirmPhone = ({
           variant='contained'
           startIcon={<ThumbUpOffAlt />}
           color='success'
-          onClick={() => addTable()}
+          onClick={addTable}
         >
           Confirm
         </Button>
