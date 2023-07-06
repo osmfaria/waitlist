@@ -1,7 +1,6 @@
 import {
   Alert,
   Backdrop,
-  Badge,
   Box,
   Button,
   Card,
@@ -15,13 +14,14 @@ import {
 } from '@mui/material'
 import { Container } from '@mui/system'
 import { useCallback, useEffect, useState } from 'react'
-import { PersonAdd, Group } from '@mui/icons-material'
+import { PersonAdd } from '@mui/icons-material'
 import { nextapi } from '../services/api'
 import CustomRow from '../components/CustomRow'
 import { Fade } from 'react-awesome-reveal'
 import Link from 'next/link'
 import NoWaitCard from '../components/NoWaitCard'
 import SkeletonRow from '../components/SkeletonRow'
+import TableAvatar from '../components/TableAvatar'
 
 const Waitlist = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -92,13 +92,17 @@ const Waitlist = () => {
           Red Umbrella Cafe
         </Typography>
 
-        <Link href='/' style={{ textDecoration: 'none' }}>
+        <Link href='/join' style={{ textDecoration: 'none' }}>
           <Button
             variant='contained'
             startIcon={<PersonAdd />}
             type='submit'
             color='success'
-            sx={{ marginBottom: '20px', fontSize: '1.2rem' }}
+            sx={{
+              marginBottom: '20px',
+              fontSize: '1.2rem',
+              padding: '6px 60px',
+            }}
             onClick={() => {
               setIsLoading(true)
             }}
@@ -117,33 +121,7 @@ const Waitlist = () => {
           <Box width={{ xs: '300px', sm: '650px' }} minHeight='400px'>
             {tables.length > 0 && (
               <Fade triggerOnce>
-                <Box
-                  sx={{
-                    borderRadius: '50%',
-                    height: '70px',
-                    width: '70px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: 3,
-                    position: 'absolute',
-                    top: '-35px',
-                    right: '-35px',
-                    background: 'white',
-                  }}
-                >
-                  <Badge
-                    color='success'
-                    badgeContent={tables.length}
-                    sx={{
-                      '& .MuiBadge-badge': {
-                        fontSize: '0.9rem',
-                      },
-                    }}
-                  >
-                    <Group sx={{ height: '30px', width: '30px' }} />
-                  </Badge>
-                </Box>
+                <TableAvatar tables={tables}/>
               </Fade>
             )}
 

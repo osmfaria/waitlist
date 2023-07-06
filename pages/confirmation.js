@@ -20,7 +20,6 @@ const Confirmation = () => {
   const ref1 = useRef(null)
   const ref2 = useRef(null)
   const ref3 = useRef(null)
-  const ref4 = useRef(null)
 
   const router = useRouter()
 
@@ -35,7 +34,7 @@ const Confirmation = () => {
 
   useEffect(() => {
     import('@lottiefiles/lottie-player')
-    setScreenWidth(width)  
+    setScreenWidth(width)
     setScreenHeight(height)
     const timer = setTimeout(() => router.push('/'), 13000)
 
@@ -95,15 +94,17 @@ const Confirmation = () => {
             <Typography textAlign='center' color='GrayText'>
               We look forward to seeing you.
             </Typography>
-            <lottie-player
-              id='first-lottie'
-              ref={ref1}
-              src='https://assets5.lottiefiles.com/packages/lf20_5y8HtRSAit.json'
-              background='transparent'
-              speed='1'
-              style={{ height: '100px', width: '100px', margin: '0 auto' }}
-              autoplay
-            ></lottie-player>
+            <Box height='100px'>
+              <lottie-player
+                id='first-lottie'
+                ref={ref1}
+                src='https://assets5.lottiefiles.com/packages/lf20_5y8HtRSAit.json'
+                background='transparent'
+                speed='1'
+                style={{ height: '100px', width: '100px', margin: '0 auto' }}
+                autoplay
+              ></lottie-player>
+            </Box>
 
             <Stack direction='row' alignItems='center' m='40px 0' spacing={2}>
               <lottie-player
@@ -148,9 +149,9 @@ const Confirmation = () => {
           startIcon={<PersonAdd />}
           type='submit'
           color='success'
-          sx={{ margin: '30px auto', fontSize: '1.2rem' }}
+          sx={{ margin: '30px auto', fontSize: '1.2rem', padding: '6px 60px' }}
           onClick={() => {
-            router.push('/')
+            router.push('/join')
             setIsLoading(true)
           }}
         >
