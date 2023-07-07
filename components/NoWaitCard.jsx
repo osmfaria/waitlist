@@ -13,8 +13,13 @@ const NoWaitCard = ({ handleBackdrop }) => {
           No waiting parties
         </Typography>
         <Link href='/join' style={{ textDecoration: 'none' }}>
-          <Button variant='outlined' color='success' onClick={handleBackdrop}>
-            Add yourself
+          <Button
+            variant='outlined'
+            color='success'
+            onClick={handleBackdrop}
+            sx={{ padding: '6px 60px' }}
+          >
+            Add ME
           </Button>
         </Link>
       </Stack>

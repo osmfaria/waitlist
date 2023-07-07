@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Container,
   Stack,
   Typography,
 } from '@mui/material'
@@ -46,7 +47,8 @@ const Landing = () => {
       >
         <CircularProgress color='inherit' />
       </Backdrop>
-      <Box
+
+      <Container
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -55,10 +57,11 @@ const Landing = () => {
           height: '100vh',
         }}
         onClick={handleClick}
+        maxWidth='md'
       >
         <Fade triggerOnce cascade>
           <Typography
-            fontSize='3.8rem'
+            fontSize={{ xs: '1.5rem', sm: '2.8rem', md: '3.8rem' }}
             fontWeight='600'
             m='0 0 20px'
             color={'#e3e3e3'}
@@ -77,13 +80,12 @@ const Landing = () => {
           >
             Join waitlist
           </Button>
-          
+
           {tables.length > 0 && (
-            <Stack direction='row' gap={1} alignSelf='end' mt='100px'>
+            <Stack direction='row' gap={1} alignSelf='center' mt='100px' alignItems='center'>
               <Typography
-                fontSize='1.4rem'
+                fontSize={{ xs: '1rem', md: '1.4rem' }}
                 fontWeight='500'
-                m='0 0 20px'
                 color={'#B2BEB5'}
               >
                 {tables.length > 1 ? 'There are' : 'There is'} currently
@@ -98,9 +100,8 @@ const Landing = () => {
                 {tables.length}
               </Avatar>
               <Typography
-                fontSize='1.4rem'
+                fontSize={{ xs: '1rem', md: '1.4rem' }}
                 fontWeight='500'
-                m='0 0 20px'
                 color={'#B2BEB5'}
               >
                 {tables.length > 1 ? 'tables' : 'table'} on the waitlist.
@@ -108,8 +109,7 @@ const Landing = () => {
             </Stack>
           )}
         </Fade>
-      </Box>
-      <Box></Box>
+      </Container>
     </>
   )
 }

@@ -1,7 +1,7 @@
 import { Group } from '@mui/icons-material'
 import { Badge, Box } from '@mui/material'
 
-const TableAvatar = ({tables}) => {
+const TableAvatar = ({ tables }) => {
   return (
     <Box
       sx={{
@@ -14,7 +14,7 @@ const TableAvatar = ({tables}) => {
         boxShadow: 3,
         position: 'absolute',
         top: '-35px',
-        right: '-35px',
+        right: { xs: '0', sm: '-35px' },
         background: 'white',
       }}
     >

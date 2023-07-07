@@ -33,16 +33,18 @@ const Confirmation = () => {
   const { width, height } = useWindowSize()
 
   useEffect(() => {
-    import('@lottiefiles/lottie-player')
     setScreenWidth(width)
     setScreenHeight(height)
+  }, [width, height])
+
+  useEffect(() => {
+    import('@lottiefiles/lottie-player')
     const timer = setTimeout(() => router.push('/'), 13000)
 
-    // Cleanup function to clear the timeout
     return () => {
       clearTimeout(timer)
     }
-  }, [width, height])
+  }, [])
 
   return (
     <>
