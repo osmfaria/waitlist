@@ -37,12 +37,13 @@ import {
   formatIncompletePhoneNumber,
   isValidPhoneNumber,
 } from 'libphonenumber-js'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { formatLocalNumber } from '../utils/functions'
 import Link from 'next/link'
 import { Poppins } from 'next/font/google'
 import ConfirmPhone from '../components/ConfirmPhone'
 import { Fade } from 'react-awesome-reveal'
+import { useRouter } from 'next/router'
 
 const poppins = Poppins({ weight: '500', subsets: ['latin'] })
 
@@ -53,18 +54,24 @@ export default function Home() {
   const [data, setData] = useState({})
   const [isSharable, setIsSharable] = useState(false)
   const [partySize, setPartySize] = useState(0)
+  const router = useRouter()
 
-  const handleBackdrop = useCallback(() => {
+  const handleBackdrop = () => {
     setIsLoading((prev) => !prev)
-  }, [])
+  }
 
-  const handleSnackBar = useCallback(() => {
+  const handleSnackBar = () => {
     setIsError((prev) => !prev)
-  }, [])
+  }
 
-  const handleDialog = useCallback(() => {
+  const handleDialog = () => {
     setIsDialogOpen((prev) => !prev)
-  }, [])
+  }
+
+  const handleClick = () => {
+    setIsLoading(true)
+    router.push('/waitlist')
+  }
 
   const initialValues = {
     name: '',
@@ -210,23 +217,19 @@ export default function Home() {
           Red Umbrella Cafe
         </Typography>
 
-        <Link href='/waitlist' style={{ textDecoration: 'none' }}>
-          <Button
-            variant='contained'
-            startIcon={<Visibility />}
-            type='submit'
-            sx={{
-              marginBottom: '20px',
-              fontSize: '1.2rem',
-              background: 'linear-gradient(to right, #F16367, #D23467)',
-            }}
-            onClick={() => {
-              setIsLoading(true)
-            }}
-          >
-            Show Waitlist
-          </Button>
-        </Link>
+        <Button
+          variant='contained'
+          startIcon={<Visibility />}
+          type='submit'
+          sx={{
+            marginBottom: '20px',
+            fontSize: '1.2rem',
+            background: 'linear-gradient(to right, #F16367, #D23467)',
+          }}
+          onClick={handleClick}
+        >
+          Show Waitlist
+        </Button>
 
         <Card
           sx={{

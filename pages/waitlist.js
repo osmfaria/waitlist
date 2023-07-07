@@ -13,21 +13,22 @@ import {
   Typography,
 } from '@mui/material'
 import { Container } from '@mui/system'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PersonAdd } from '@mui/icons-material'
 import { nextapi } from '../services/api'
 import CustomRow from '../components/CustomRow'
 import { Fade } from 'react-awesome-reveal'
-import Link from 'next/link'
 import NoWaitCard from '../components/NoWaitCard'
 import SkeletonRow from '../components/SkeletonRow'
 import TableAvatar from '../components/TableAvatar'
+import { useRouter } from 'next/router'
 
 const Waitlist = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(true)
   const [tables, setTables] = useState([])
   const [isError, setIsError] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     nextapi
@@ -37,13 +38,18 @@ const Waitlist = () => {
       .finally(() => setIsFetching(false))
   }, [])
 
-  const handleBackdrop = useCallback(() => {
+  const handleBackdrop = () => {
     setIsLoading((prev) => !prev)
-  }, [])
+  }
 
-  const handleSnackBar = useCallback(() => {
+  const handleSnackBar = () => {
     setIsError((prev) => !prev)
-  }, [])
+  }
+
+  const handleClick = () => {
+    setIsLoading(true)
+    router.push('/join')
+  }
 
   return (
     <>
@@ -92,24 +98,20 @@ const Waitlist = () => {
           Red Umbrella Cafe
         </Typography>
 
-        <Link href='/join' style={{ textDecoration: 'none' }}>
-          <Button
-            variant='contained'
-            startIcon={<PersonAdd />}
-            type='submit'
-            color='success'
-            sx={{
-              marginBottom: '20px',
-              fontSize: '1.2rem',
-              padding: '6px 60px',
-            }}
-            onClick={() => {
-              setIsLoading(true)
-            }}
-          >
-            Add Me
-          </Button>
-        </Link>
+        <Button
+          variant='contained'
+          startIcon={<PersonAdd />}
+          type='submit'
+          color='success'
+          sx={{
+            marginBottom: '20px',
+            fontSize: '1.2rem',
+            padding: '6px 60px',
+          }}
+          onClick={handleClick}
+        >
+          Add Me
+        </Button>
 
         <Card
           sx={{
@@ -121,7 +123,7 @@ const Waitlist = () => {
           <Box width={{ xs: '300px', sm: '650px' }} minHeight='400px'>
             {tables.length > 0 && (
               <Fade triggerOnce>
-                <TableAvatar tables={tables}/>
+                <TableAvatar tables={tables} />
               </Fade>
             )}
 
