@@ -81,7 +81,7 @@ export default function Home() {
     size: '',
     phone: '',
     sharedTable: '',
-    sittingPreference: 'Inside',
+    sittingPreference: '',
   }
 
   const validationSchema = yup.object({
@@ -96,7 +96,7 @@ export default function Home() {
       .required(),
     phone: yup.string().required(),
     sharedTable: yup.string(),
-    sittingPreference: yup.string().required('please select an option'),
+    sittingPreference: yup.string(),
   })
 
   const handlePhoneInput = (event, formik) => {

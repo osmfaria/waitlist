@@ -37,9 +37,6 @@ function Header() {
           borderRadius: 'inherit',
           animation: `${gradientAnimation} 7s linear infinite`,
         },
-        '&::after': {
-          filter: 'blur(1.2rem)',
-        },
       }}
     >
       <Box
