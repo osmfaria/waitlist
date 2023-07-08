@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Container,
   Stack,
   Typography,
 } from '@mui/material'
@@ -48,16 +47,15 @@ const Landing = () => {
         <CircularProgress color='inherit' />
       </Backdrop>
 
-      <Container
+      <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           flexDirection: 'column',
-          padding: '18vh 0',
-          height: '100vh',
+          padding: '3vh 0',
+          height: '100%',
         }}
         onClick={handleClick}
-        maxWidth='md'
       >
         <Fade triggerOnce cascade>
           <Typography
@@ -82,7 +80,13 @@ const Landing = () => {
           </Button>
 
           {tables.length > 0 && (
-            <Stack direction='row' gap={1} alignSelf='center' mt='100px' alignItems='center'>
+            <Stack
+              direction='row'
+              gap={1}
+              alignSelf='center'
+              mt='100px'
+              alignItems='center'
+            >
               <Typography
                 fontSize={{ xs: '1rem', md: '1.4rem' }}
                 fontWeight='500'
@@ -109,7 +113,7 @@ const Landing = () => {
             </Stack>
           )}
         </Fade>
-      </Container>
+      </Box>
     </>
   )
 }

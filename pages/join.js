@@ -1,7 +1,6 @@
 import {
   Button,
   Card,
-  Container,
   FormControl,
   FormHelperText,
   InputAdornment,
@@ -20,6 +19,7 @@ import {
   RadioGroup,
   Radio,
   Divider,
+  Box,
 } from '@mui/material'
 import {
   Person,
@@ -202,24 +202,16 @@ export default function Home() {
         handleBackdrop={handleBackdrop}
       />
 
-      <Container
+      <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           flexDirection: 'column',
           padding: '50px 10px 0px',
         }}
-        maxWidth='sm'
+        maxWidth='550px'
+        m='auto'
       >
-        <Typography
-          fontSize='2.4rem'
-          fontWeight='600'
-          m='0 0 20px'
-          color={'#e3e3e3'}
-        >
-          Red Umbrella Cafe
-        </Typography>
-
         <Button
           variant='contained'
           startIcon={<Visibility />}
@@ -457,7 +449,7 @@ export default function Home() {
         >
           Made with 🖤 by Osmar
         </Typography>
-      </Container>
+      </Box>
     </>
   )
 }

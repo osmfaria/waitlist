@@ -8,7 +8,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import { Container } from '@mui/system'
 import { Fade } from 'react-awesome-reveal'
 import { useEffect, useRef, useState } from 'react'
 import { PersonAdd } from '@mui/icons-material'
@@ -58,24 +57,14 @@ const Confirmation = () => {
 
       <Confetti width={screenWidth} height={screenHeight} recycle={false} />
 
-      <Container
+      <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           flexDirection: 'column',
           padding: '50px 10px 0px',
         }}
-        maxWidth='sm'
       >
-        <Typography
-          fontSize='2.4rem'
-          fontWeight='600'
-          m='0 0 20px'
-          color={'#e3e3e3'}
-        >
-          Red Umbrella Cafe
-        </Typography>
-
         <Card sx={{ padding: '30px 20px' }}>
           <Fade triggerOnce>
             <Typography
@@ -159,7 +148,7 @@ const Confirmation = () => {
         >
           Add Me
         </Button>
-      </Container>
+      </Box>
     </>
   )
 }

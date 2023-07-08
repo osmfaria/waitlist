@@ -1,4 +1,5 @@
-import { Box } from '@mui/material'
+import { Box, Container } from '@mui/material'
+import Header from './Header'
 
 const Layout = ({ children }) => {
   return (
@@ -9,9 +10,13 @@ const Layout = ({ children }) => {
         backgroundImage: 'url(/waves.svg)',
         backgroundSize: 'cover',
         minHeight: '100vh',
+        boxSizing: 'border-box',
       }}
     >
-      {children}
+      <Container maxWidth='md'>
+        <Header />
+        {children}
+      </Container>
     </Box>
   )
 }

@@ -78,7 +78,7 @@ const Waitlist = () => {
         </Alert>
       </Snackbar>
 
-      <Container
+      <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -87,17 +87,7 @@ const Waitlist = () => {
           height: '100%',
           marginBottom: '20px',
         }}
-        maxWidth='sm'
       >
-        <Typography
-          fontSize='2.4rem'
-          fontWeight='600'
-          m='0 0 20px'
-          color={'#e3e3e3'}
-        >
-          Red Umbrella Cafe
-        </Typography>
-
         <Button
           variant='contained'
           startIcon={<PersonAdd />}
@@ -115,9 +105,10 @@ const Waitlist = () => {
 
         <Card
           sx={{
-            padding: '30px 30px',
+            padding: '40px 30px',
             position: 'relative',
             overflow: 'visible',
+            boxShadow: 3,
           }}
         >
           <Box width={{ xs: '300px', sm: '650px' }} minHeight='400px'>
@@ -149,7 +140,7 @@ const Waitlist = () => {
             )}
           </Box>
         </Card>
-      </Container>
+      </Box>
     </>
   )
 }
