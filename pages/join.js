@@ -39,11 +39,11 @@ import {
 } from 'libphonenumber-js'
 import { useState } from 'react'
 import { formatLocalNumber } from '../utils/functions'
-import Link from 'next/link'
 import { Poppins } from 'next/font/google'
 import ConfirmPhone from '../components/ConfirmPhone'
 import { Fade } from 'react-awesome-reveal'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 
 const poppins = Poppins({ weight: '500', subsets: ['latin'] })
 
@@ -55,6 +55,9 @@ export default function Home() {
   const [isSharable, setIsSharable] = useState(false)
   const [partySize, setPartySize] = useState(0)
   const router = useRouter()
+  const currentTime = dayjs(new Date())
+  const patioClosingTime = currentTime.set('hour', 13).set('minute', 45)
+  const isPatioOpen = patioClosingTime > currentTime
 
   const handleBackdrop = () => {
     setIsLoading((prev) => !prev)
@@ -78,7 +81,7 @@ export default function Home() {
     size: '',
     phone: '',
     sharedTable: '',
-    sittingPreference: '',
+    sittingPreference: 'Inside',
   }
 
   const validationSchema = yup.object({
@@ -312,57 +315,61 @@ export default function Home() {
                     </FormHelperText>
                   </FormControl>
 
-                  <Divider />
-
-                  <Field name='sittingPreference'>
-                    {({ field }) => (
-                      <FormControl
-                        error={
-                          formik.touched.sittingPreference &&
-                          !!formik.errors.sittingPreference
-                        }
-                        onChange={(e) => {
-                          // Set the state that will control if sharaed table input will be visible
-                          if (e.target.value !== 'Patio') setIsSharable(true)
-                          else setIsSharable(false)
-                        }}
-                      >
-                        <FormLabel id='buttons-group-label'>
-                          Sitting preference
-                        </FormLabel>
-                        <RadioGroup
-                          row
-                          aria-labelledby='buttons-group-label'
-                          name='buttons-group'
-                          {...field}
-                        >
-                          <FormControlLabel
-                            value='Inside'
-                            control={<Radio />}
-                            label='Inside'
-                          />
-                          <FormControlLabel
-                            value='Patio'
-                            control={<Radio />}
-                            label='Patio'
-                          />
-                          <FormControlLabel
-                            value='Both'
-                            control={<Radio />}
-                            label='Either is fine'
-                          />
-                        </RadioGroup>
-                        <FormHelperText>
-                          {formik.touched.sittingPreference &&
-                            formik.errors.sittingPreference && (
-                              <Typography variant='caption' color='error'>
-                                {formik.errors.sittingPreference}
-                              </Typography>
-                            )}
-                        </FormHelperText>
-                      </FormControl>
-                    )}
-                  </Field>
+                  {isPatioOpen && (
+                    <>
+                      <Divider />
+                      <Field name='sittingPreference'>
+                        {({ field }) => (
+                          <FormControl
+                            error={
+                              formik.touched.sittingPreference &&
+                              !!formik.errors.sittingPreference
+                            }
+                            onChange={(e) => {
+                              // Set the state that will control if sharaed table input will be visible
+                              if (e.target.value !== 'Patio')
+                                setIsSharable(true)
+                              else setIsSharable(false)
+                            }}
+                          >
+                            <FormLabel id='buttons-group-label'>
+                              Sitting preference
+                            </FormLabel>
+                            <RadioGroup
+                              row
+                              aria-labelledby='buttons-group-label'
+                              name='buttons-group'
+                              {...field}
+                            >
+                              <FormControlLabel
+                                value='Inside'
+                                control={<Radio />}
+                                label='Inside'
+                              />
+                              <FormControlLabel
+                                value='Patio'
+                                control={<Radio />}
+                                label='Patio'
+                              />
+                              <FormControlLabel
+                                value='Both'
+                                control={<Radio />}
+                                label='Either is fine'
+                              />
+                            </RadioGroup>
+                            <FormHelperText>
+                              {formik.touched.sittingPreference &&
+                                formik.errors.sittingPreference && (
+                                  <Typography variant='caption' color='error'>
+                                    {formik.errors.sittingPreference}
+                                  </Typography>
+                                )}
+                            </FormHelperText>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </>
+                  )}
 
                   {isSharable && partySize < 3 && (
                     <Fade>
