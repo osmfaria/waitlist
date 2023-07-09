@@ -82,15 +82,15 @@ const Landing = () => {
           {tables.length > 0 && (
             <Stack
               direction='row'
-              gap={1}
               alignSelf='center'
-              mt='100px'
+              mt='70px'
               alignItems='center'
             >
               <Typography
                 fontSize={{ xs: '1rem', md: '1.4rem' }}
                 fontWeight='500'
                 color={'#B2BEB5'}
+                sx={{ marginRight: '7px' }}
               >
                 {tables.length > 1 ? 'There are' : 'There is'} currently
               </Typography>
@@ -99,6 +99,7 @@ const Landing = () => {
                 variant='rounded'
                 sx={{
                   background: 'linear-gradient(to right, #F16367, #D23467)',
+                  marginRight: '7px',
                 }}
               >
                 {tables.length}

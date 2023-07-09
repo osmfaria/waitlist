@@ -1,16 +1,23 @@
 import { keyframes } from '@emotion/react'
 import { Box } from '@mui/material'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
+const gradientAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`
 function Header() {
-  const gradientAnimation = keyframes`
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  `
+  const router = useRouter()
+
+  const handleClick = () => {
+    router.push('/')
+  }
+
   return (
     <Box
       component='div'
@@ -22,6 +29,7 @@ function Header() {
         mt: '20px',
         placeContent: 'center',
         position: 'relative',
+        cursor: 'pointer',
         '&::before, &::after': {
           content: '""',
           position: 'absolute',
@@ -35,9 +43,10 @@ function Header() {
               #FA7268
             )`,
           borderRadius: 'inherit',
-          animation: `${gradientAnimation} 7s linear infinite`,
+          animation: `${gradientAnimation} 4s linear infinite`,
         },
       }}
+      onClick={handleClick}
     >
       <Box
         sx={{
@@ -48,7 +57,13 @@ function Header() {
           zIndex: 1,
         }}
       >
-        <Image src={'/logo.png'} height={100} width={100} alt='logo' />
+        <Image
+          src={'/logo.png'}
+          height={100}
+          width={100}
+          alt='logo'
+          loading='lazy'
+        />
       </Box>
     </Box>
   )
