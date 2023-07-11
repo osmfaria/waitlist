@@ -9,6 +9,11 @@ The waitlist can be used in a kiosk mode, allowing customers to add themselves t
 > Check the deployed [app](https://waitlist-redumbrella.vercel.app/).
 <img src="./public/app-design.png" />
 
+
+## Architecture
+
+<img src="./public/diagram.png" />
+
 ## 💭 Features
 
 :heavy_check_mark: The app uses webhooks to automatically update the internal waitlist whenever changes are made through the TablesReady external API.\
