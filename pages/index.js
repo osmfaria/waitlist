@@ -109,7 +109,7 @@ const Landing = () => {
                 fontWeight='500'
                 color={'#B2BEB5'}
               >
-                {tables.length > 1 ? 'tables' : 'table'} on the waitlist.
+                {tables.length > 1 ? 'parties' : 'party'} on the waitlist.
               </Typography>
             </Stack>
           )}
