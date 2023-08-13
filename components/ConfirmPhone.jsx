@@ -17,6 +17,7 @@ const ConfirmPhone = ({
   handleDialog,
   isDialogOpen,
   data,
+  phoneToDisplay,
   handleSnackBar,
   handleBackdrop,
 }) => {
@@ -44,7 +45,7 @@ const ConfirmPhone = ({
         <Stack direction='row' spacing={1} alignItems='center'>
           <LocalPhone />
           <Divider flexItem orientation='vertical' />
-          <Typography fontSize='1.2rem'>{data.phone}</Typography>
+          <Typography fontSize='1.2rem'>{phoneToDisplay}</Typography>
         </Stack>
       </DialogContent>
       <DialogContentText sx={{ padding: '0 20px' }}>

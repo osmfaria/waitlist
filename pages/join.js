@@ -38,7 +38,7 @@ import {
   isValidPhoneNumber,
 } from 'libphonenumber-js'
 import { useState } from 'react'
-import { formatLocalNumber } from '../utils/functions'
+import { formatNumberByLocation } from '../utils/functions'
 import { Poppins } from 'next/font/google'
 import ConfirmPhone from '../components/ConfirmPhone'
 import { Fade } from 'react-awesome-reveal'
@@ -54,6 +54,8 @@ export default function Home() {
   const [data, setData] = useState({})
   const [isSharable, setIsSharable] = useState(false)
   const [partySize, setPartySize] = useState(0)
+  const [phoneWithCountryCode, setPhoneWithCountryCode] = useState('')
+  const [phoneToDisplay, setPhoneToDisplay] = useState('')
   const router = useRouter()
   const currentTime = dayjs(new Date())
   const patioClosingTime = currentTime.set('hour', 13).set('minute', 45)
@@ -85,7 +87,7 @@ export default function Home() {
   }
 
   const validationSchema = yup.object({
-    name: yup.string().required().max(25).min(2),
+    name: yup.string().required('name is required').max(25).min(2),
     size: yup
       .number()
       .max(
@@ -93,8 +95,8 @@ export default function Home() {
         'To accommodate groups larger than 6, kindly speak with one of our servers.'
       )
       .min(1)
-      .required(),
-    phone: yup.string().required(),
+      .required('number of guests is required'),
+    phone: yup.string().required('phone number is required'),
     sharedTable: yup.string(),
     sittingPreference: yup.string(),
   })
@@ -102,28 +104,30 @@ export default function Home() {
   const handlePhoneInput = (event, formik) => {
     const input = event.target.value
 
-    const nationalPhone = formatLocalNumber(input)
-    const internationalPhone = formatIncompletePhoneNumber(input)
-    const parsedNationalPhone = findNumbers(nationalPhone)
+    const phoneNumberByLocation = formatNumberByLocation(input)
+    const parsedPhoneNumberByLocation = findNumbers(phoneNumberByLocation)
 
     if (
-      parsedNationalPhone.length > 0 &&
-      (parsedNationalPhone[0].country === 'CA' ||
-        parsedNationalPhone[0].country === 'US')
+      parsedPhoneNumberByLocation.length > 0 &&
+      (parsedPhoneNumberByLocation[0].country === 'CA' ||
+        parsedPhoneNumberByLocation[0].country === 'US')
     ) {
-      const numberObj = parsePhoneNumber(nationalPhone)
+      const numberObj = parsePhoneNumber(phoneNumberByLocation)
       const formattedNationalPhone = numberObj.format('NATIONAL', {
         nationalPrefix: false,
       })
       formik.setFieldValue('phone', formattedNationalPhone)
     } else {
+      const internationalPhone = formatIncompletePhoneNumber(input)
       formik.setFieldValue('phone', internationalPhone)
     }
+
+    setPhoneWithCountryCode(phoneNumberByLocation)
   }
 
   const validatePhone = (input) => {
     let errorMessage
-    const updatedphone = formatLocalNumber(input)
+    const updatedphone = formatNumberByLocation(input)
     const isValidNumber = isValidPhoneNumber(updatedphone)
     if (!isValidNumber) {
       errorMessage = 'invalid phone number'
@@ -148,7 +152,7 @@ export default function Home() {
         : ''
 
     // Build note
-    const noteData =
+    const note =
       sharedTableData && sittingPreferenceData
         ? `${sharedTableData} | ${sittingPreferenceData}`
         : sharedTableData + sittingPreferenceData
@@ -156,12 +160,13 @@ export default function Home() {
     const inputData = {
       name: userInput.name,
       size: userInput.size,
-      phone: userInput.phone,
-      note: noteData,
+      phone: phoneWithCountryCode, // Phone parsed for api request
+      note,
     }
 
     // State will be passed as a prop to confirmPhone modal
     setData(inputData)
+    setPhoneToDisplay(userInput.phone) // phone parsed for ui
 
     // Open modal to confirm phone number
     handleDialog()
@@ -198,6 +203,7 @@ export default function Home() {
         handleDialog={handleDialog}
         isDialogOpen={isDialogOpen}
         data={data}
+        phoneToDisplay={phoneToDisplay}
         handleSnackBar={handleSnackBar}
         handleBackdrop={handleBackdrop}
       />
